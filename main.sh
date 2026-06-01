@@ -25,8 +25,19 @@ if [[ "$SISTEM" == *"MINGW"* || "$SISTEM" == *"CYGWIN"* || "$SISTEM" == *"NT"* ]
     echo -n "Anakart Bilgisi: " >> report.log
     wmic baseboard get Product | tail -n +2 | tr -d '\r' | grep -v '^$' >> report.log
     
+<<<<<<< HEAD
     echo -n "Disk UUID: " >> report.log
     wmic diskdrive get SerialNumber | tail -n +2 | tr -d '\r' | grep -v '^$' >> report.log
+=======
+    echo "Disk Detaylari:" >> report.log
+    wmic diskdrive get Model, SerialNumber, Size | tail -n +2 | tr -d '\r' | grep -v '^$' | while read -r line; do
+        size=$(echo "$line" | awk '{print $failed; print $NF}') 
+        d_model=$(echo "$line" | awk '{$NF=""; $(NF-1)=""; print $0}' | sed 's/[[:space:]]*$//')
+        d_serial=$(echo "$line" | awk '{print $(NF-1)}')
+        d_size=$(echo "$line" | awk '{print $NF}')
+        echo "  -> Model: $d_model | Seri No: $d_serial | Kapasite: $((d_size / 1024 / 1024 / 1024)) GB ($d_size Byte)" >> report.log
+    done
+>>>>>>> 4d49b4b (update)
     
     echo -n "MAC Adresi: " >> report.log
     getmac | grep -i "tcpip" | head -n 1 | awk '{print $1}' | tr -d '\r' >> report.log
